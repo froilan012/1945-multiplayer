@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-    <script src="../scripts/script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script src="../scripts/index-script.js"></script>
+  <title>Game Landing Page</title>
 </head>
 <body>
     <div id="container">
         <canvas id="gameCanvas"></canvas>
+        <div class="landing-page">
+            <h1>Welcome to 1945 Game</h1>
+            <p>Get ready to experience the thrill of World War II air battles!</p>
+            <label for="name">Please enter your name:</label>
+            <input type="text" name="name" id="name">
+            <div class="model">
+                <p>Select your Aircraft</p>
+                <img src="../image/jet-1.png" alt="model-1" id="model-1" clicked="false">
+                <img src="../image/jet-2.png" alt="model-2" id="model-2" clicked="false">
+                <img src="../image/jet-3.png" alt="model-3" id="model-3" clicked="false">
+            </div>
+            <button id="enter-game-btn">Enter Game</button>
+          </div>
     </div>
-    <div id="players-list"></div>
-    <p>Background Photo by Ryo Takemasa on <a href="https://www.behance.net/gallery/67129169/Water-landscapes">behance</a></p>
-    <p>
-        Source for pixel arts
-        https://dinopixel.com/pixel-art/f-15-fighter-jet/20271
-        https://chrismalnu.wordpress.com/2016/02/03/required-asset-list-for-shoot-em-up/
-    </p>
+  
 </body>
 </html>
-

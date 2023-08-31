@@ -47,7 +47,7 @@ class Player {
         this.directionDown = false;
         this.fire = false;
         this.bulletCount = 10000;
-        this.health = 1000;
+        this.health = 100;
         this.reloadStatus = false;
         this.power = 3;
         setInterval(() => {
@@ -199,8 +199,10 @@ io.on('connection', function (socket) {
 
 setInterval(() => {
     let count = Math.ceil(3 * Math.random());
-    for(i=0; i<count; i++) {
-        enemies.push(new Enemy);
+    if(players.length > 0) {
+        for(i=0; i<count; i++) {
+            enemies.push(new Enemy);
+        }
     }
 }, 500);
 

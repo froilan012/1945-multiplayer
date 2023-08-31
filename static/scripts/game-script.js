@@ -1,7 +1,12 @@
 $(document).ready(function () {
 
+    const queryParams = new URLSearchParams(window.location.search);
+    const playerName = queryParams.get('name');
+
+    console.log(playerName);
+
     var socket = io();
-    var name = 'froilan';
+    var name = playerName;
     socket.emit('got_a_new_player', {name: name});
 
     socket.on('updateAllContainer', function (data) {
@@ -161,40 +166,30 @@ $(document).ready(function () {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Set canvas dimensions
     canvas.width = 700;
     canvas.height = 700;
 
-    // Background variables
     const backgroundSpeed = 1;
     let backgroundY = 0;
 
-    // Load background image
     const backgroundImage = new Image();
-    backgroundImage.src = '../image/ocean.jpg'; // Replace with your image path
+    backgroundImage.src = '../image/ocean.jpg';
 
-    // Game loop
     function gameLoop() {
-        // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Update background position
         backgroundY += backgroundSpeed;
 
-        // Draw background
         ctx.drawImage(backgroundImage, 0, backgroundY, canvas.width, canvas.height);
         ctx.drawImage(backgroundImage, 0, backgroundY - canvas.height, canvas.width, canvas.height);
 
-        // Loop the background
         if (backgroundY >= canvas.height) {
             backgroundY = 0;
         }
 
-        // Call the next frame
         requestAnimationFrame(gameLoop);
     }
 
-    // Start the game loop
     gameLoop();
 })
 
