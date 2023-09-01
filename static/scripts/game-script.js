@@ -2,18 +2,20 @@ $(document).ready(function () {
 
     const queryParams = new URLSearchParams(window.location.search);
     const playerName = queryParams.get('name');
+    const playerModel = queryParams.get('model');
 
-    console.log(playerName);
+    console.log(playerName, playerModel);
 
     var socket = io();
     var name = playerName;
-    socket.emit('got_a_new_player', {name: name});
+    socket.emit('got_a_new_player', {name: playerName, model: playerModel});
 
     socket.on('updateAllContainer', function (data) {
 
         
         $('.enemy').remove();
         $('.player').remove();
+        $('.shadow').remove();
         $('.bullet').remove();
         $('#players-list').empty();
 
@@ -40,6 +42,13 @@ $(document).ready(function () {
             player.style.left = data.players[i].iniPosX + 'px';
             player.style.top = data.players[i].iniPosY + 'px';
             player.style.position = 'absolute';
+
+            const shadow = document.createElement('div');
+            shadow.setAttribute('class','shadow');
+            shadow.innerHTML =  data.players[i].outline;
+            shadow.style.left = data.players[i].iniPosX + 7 + 'px';
+            shadow.style.top = data.players[i].iniPosY + 35 + 'px';
+            shadow.style.position = 'absolute';
             
             for(j=0; j<data.players[i].bullets.length; j++) {
                 const bullet = document.createElement('div');
@@ -52,6 +61,7 @@ $(document).ready(function () {
                 $('#container').append(bullet);
             }
             $('#container').append(player);
+            $('#container').append(shadow);
             
             const test = document.getElementById(data.players[i].id)
             if(data.players[i].reloadStatus && data.players[i].health > 0) {
@@ -87,7 +97,7 @@ $(document).ready(function () {
                 rotation += 10;
                 reloadDiv.style.transform = `rotate(${rotation}deg)`;
             };
-            setInterval(rotateSpinner, 25);
+            setInterval(rotateSpinner, 15);
         }
     })
     

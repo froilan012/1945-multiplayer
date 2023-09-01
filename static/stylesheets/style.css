@@ -21,11 +21,11 @@ body {
     z-index: 2;
 }
 
-#player {
-    width: 50px;
-    height: 50px;
+.player {
     position: relative;
+    z-index: 2;
 }
+
 
 #enemy-area {
     position: absolute;
@@ -85,7 +85,11 @@ body {
     background-color: #00ff00;
 }
 
-
+.shadow img {
+    width: 35px;
+    height: 35px;
+    filter: grayscale(10%) brightness(5%);
+}
 
 
 
@@ -139,11 +143,3 @@ button:hover {
     border-radius: 10px;
     padding: 5px;
 }
-
-/* .model img:hover {
-    border: 4px solid rgb(235, 231, 14);
-}
-
-.model img:active {
-    border: 4px solid rgb(17, 21, 218);
-} */
