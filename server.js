@@ -5,6 +5,7 @@ const io = require('socket.io')(server);
 
 let enemies = [];
 let players = [];
+let powerups = [];
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -45,10 +46,10 @@ class Player {
         this.directionUp = false;
         this.directionDown = false;
         this.fire = false;
-        this.bulletCount = 10;
-        this.health = 1000;
+        this.bulletCount = 1000;
+        this.health = 100;
         this.reloadStatus = false;
-        this.power = 3;
+        this.power = 1;
         setInterval(() => {
             this.playerMove();
         }, 5);
@@ -125,6 +126,52 @@ class Enemy {
             }
         }, 10);
     }
+}
+
+class Powerup {
+    constructor () {
+        this.posX = Math.floor(650 * Math.random());
+        this.posY = 0;
+        this.outline = `<img src="../image/powerup.png"></img>`;
+        this.move();
+        this.directionX = Math.random() < 0.5;
+        this.directionY = false;
+        this.time = 0;
+        setInterval(() => {
+            this.time += 1;
+        }, 1000);
+
+    }
+
+    move() {
+        setInterval(() => {
+            if (!this.directionY) {
+                this.posY += 3;
+            } else {
+                this.posY -= 3;
+            }
+
+            if(this.posY > 300) {
+                this.directionY = true;
+            }
+            else if(this.posY < 10) {
+                this.directionY = false;
+            }
+
+            if (!this.directionX) {
+                this.posX += 3;
+            } else {
+                this.posX -= 3;
+            }
+
+            if(this.posX > 650) {
+                this.directionX = true;
+            }
+            else if(this.posX < 0) {
+                this.directionX = false;
+            }
+        }, 10);
+    }    
 }
 
 io.on('connection', function (socket) {
@@ -211,10 +258,23 @@ setInterval(() => {
             }
         }, 3000);
     }
-}, 50000);
+}, 500);
 
 setInterval(() => {
+    if(players.length > 0) {
+        powerups.push(new Powerup);
+    }
+}, 15000);
+
+setInterval(() => {
+
+    for(let i=0; i<powerups.length; i++) {
+        if(powerups[i].time == 10) {
+            powerups.splice(i,1);
+        }
+    }
     
+
     for(let i=0; i<players.length; i++) {
         for(let j=0; j<players[i].bullets.length; j++) {
             if(players[i].bullets[j].posY < 10) {
@@ -252,6 +312,7 @@ setInterval(() => {
 
             let enemy = enemies;
             let player = players;
+            let powerup = powerups;
 
             player.forEach((playerElement) => {
                 enemy.forEach((enemyElement) => {
@@ -265,6 +326,16 @@ setInterval(() => {
                         enemies.splice(enemies.indexOf(enemyElement), 1)
                     }
                 })
+
+                powerup.forEach(powerupElem => {
+                    if (playerElement.iniPosX >= powerupElem.posX - 50 && playerElement.iniPosX <= powerupElem.posX + 50 && playerElement.iniPosY <= powerupElem.posY && playerElement.iniPosY >= powerupElem.posY - 50) {
+                        if(players[player.indexOf(playerElement)].power < 3) {
+                            players[player.indexOf(playerElement)].power++;
+                        }
+                        
+                        powerup.splice(powerups.indexOf(powerupElem));
+                    }
+                })
             });
     }
 
@@ -276,6 +347,7 @@ setInterval(() => {
 
     io.emit('updateAllContainer', {
         enemies: enemies,
-        players: players
+        players: players,
+        powerups: powerups
     })
 }, 10);

@@ -14,10 +14,24 @@ $(document).ready(function () {
 
         
         $('.enemy').remove();
+        $('.powerup').remove();
         $('.player').remove();
         $('.shadow').remove();
         $('.bullet').remove();
         $('#players-list').empty();
+
+        for(let i=0; i<data.powerups.length; i++) {
+            let powerPosX = data.powerups[i].posX;
+            let powerPosY = data.powerups[i].posY;
+
+            const powerUp = document.createElement('div');
+            powerUp.setAttribute('class', 'powerup');
+            powerUp.style.position = 'absolute';
+            powerUp.innerHTML = data.powerups[i].outline;
+            powerUp.style.top = powerPosY + 'px'
+            powerUp.style.left = powerPosX + 'px'
+            $('#container').append(powerUp);
+        }
 
         for(let i=0; i<data.enemies.length; i++) {
             let enemyPosx = data.enemies[i].enemyPosx;
@@ -85,11 +99,13 @@ $(document).ready(function () {
 
     socket.on('reloadDiv', function(data) {
         $('.loader').remove();
+        $('.reload').remove();
         for(let i=0; i<data.players.length; i++) {
             const reloadDiv = document.createElement('div');
             reloadDiv.setAttribute('id', data.players[i].id);
             reloadDiv.setAttribute('class', 'loader');
             data.players[i].reloadStatus = false;
+
             $('#container').append(reloadDiv);
 
             let rotation = 0;
