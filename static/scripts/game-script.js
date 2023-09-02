@@ -4,21 +4,23 @@ $(document).ready(function () {
     const playerName = queryParams.get('name');
     const playerModel = queryParams.get('model');
 
-    console.log(playerName, playerModel);
-
     var socket = io();
-    var name = playerName;
     socket.emit('got_a_new_player', {name: playerName, model: playerModel});
 
     socket.on('updateAllContainer', function (data) {
 
+        var index = data.players.findIndex(function(obj) {
+            return obj.id === socket.id;
+        });
         
         $('.enemy').remove();
         $('.powerup').remove();
         $('.player').remove();
         $('.shadow').remove();
         $('.bullet').remove();
+        $('.playerStats').remove();
         $('#players-list').empty();
+        // $('#warning').empty();
 
         for(let i=0; i<data.powerups.length; i++) {
             let powerPosX = data.powerups[i].posX;
@@ -77,15 +79,47 @@ $(document).ready(function () {
             $('#container').append(player);
             $('#container').append(shadow);
             
-            const test = document.getElementById(data.players[i].id)
+            const reloadDisplay = document.getElementById(data.players[i].id)
             if(data.players[i].reloadStatus && data.players[i].health > 0) {
-                test.style.display = 'inline-block';
-                test.style.left = data.players[i].iniPosX + 'px';
-                test.style.top = data.players[i].iniPosY + 'px';
+                reloadDisplay.style.display = 'inline-block';
+                reloadDisplay.style.left = data.players[i].iniPosX + 'px';
+                reloadDisplay.style.top = data.players[i].iniPosY + 'px';
             } else {
-                test.style.display = 'none';
+                reloadDisplay.style.display = 'none';
             }
         }
+
+        if(index!= -1) {
+            const player = document.createElement('div');
+            player.setAttribute('class','playerStats');
+            player.innerHTML = `<div class="name">Name: ${data.players[index].name}</div>
+                                <div class="health-bar">
+                                    <div class="health-level" id="healthLevel" style="width: ${data.players[index].health}%">
+                                        <div class="health-count">Health: ${data.players[index].health}</div>
+                                    </div>
+                                </div>
+                                <div class="ammo">Ammo: ${data.players[index].bulletCount}</div>
+                                <div class="power">Firepower: ${data.players[index].power}</div>`;
+
+            $('#player').append(player);
+
+            const warning = document.getElementById('warning');
+            if(data.players[index].bulletCount == 0 && data.players[index].health != 0) {
+                warning.style.display = 'block'
+                warning.style.color = 'red'
+                warning.style.animation = 'blink 1s infinite';
+                warning.innerHTML = "RELOAD!!!";
+            } else if (data.players[index].health == 0){
+                warning.style.display = 'block'
+                warning.style.animation = '';
+                warning.style.color = 'black'
+                warning.innerHTML = "GAME OVER";
+            } 
+            else {
+                warning.style.display = 'none'
+            }
+        }
+        
         
         for(let i=0; i<data.players.length; i++) {
             const playerList = document.createElement('div');
@@ -95,6 +129,8 @@ $(document).ready(function () {
         
             $('#players-list').append(playerList);
         }
+
+        
     })
 
     socket.on('reloadDiv', function(data) {
@@ -110,6 +146,9 @@ $(document).ready(function () {
 
             let rotation = 0;
             const rotateSpinner = () => {
+                if(rotation == 360) {
+                    rotation = 0;
+                }
                 rotation += 10;
                 reloadDiv.style.transform = `rotate(${rotation}deg)`;
             };

@@ -6,7 +6,6 @@ const io = require('socket.io')(server);
 let enemies = [];
 let players = [];
 let powerups = [];
-let explosions = [];
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -44,7 +43,7 @@ class Player {
         this.directionUp = false;
         this.directionDown = false;
         this.fire = false;
-        this.bulletCount = 1000;
+        this.bulletCount = 20;
         this.health = 100;
         this.reloadStatus = false;
         this.power = 1;
@@ -217,7 +216,7 @@ io.on('connection', function (socket) {
         if(players[player].reloadStatus) {
             
             setTimeout(() => {
-                players[player].bulletCount = 10;
+                players[player].bulletCount = 20;
                 players[player].outline = `<img src="../image/${players[player].model}.png"></img>`;
                 players[player].reloadStatus = false;
             }, 1000);
@@ -247,7 +246,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function() {
-        players.splice(players.indexOf(socket.id))
+        players.splice(players.indexOf(socket.id, 1))
     })
 
     
