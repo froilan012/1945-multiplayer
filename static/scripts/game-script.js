@@ -116,6 +116,30 @@ $(document).ready(function () {
             setInterval(rotateSpinner, 15);
         }
     })
+
+
+    socket.on('updateExplosion', function(data) {
+        
+        const expl = document.createElement('img');
+        expl.setAttribute('class', 'explosion');
+        expl.src = "../image/explosion.png";
+        
+
+        $('#container').append(expl);
+
+        setInterval(() => {
+            data.explosions[0]--;
+            data.explosions[1]--;
+            expl.style.top = data.explosions[1] + 'px';
+            expl.style.left = data.explosions[0] + 'px';
+            
+        }, 50);
+
+        setTimeout(() => {
+            $(expl).remove();
+        }, 300);
+
+    })
     
 
     window.addEventListener('keydown', () => {

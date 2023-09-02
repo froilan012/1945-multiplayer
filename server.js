@@ -6,6 +6,7 @@ const io = require('socket.io')(server);
 let enemies = [];
 let players = [];
 let powerups = [];
+let explosions = [];
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -18,16 +19,13 @@ class Bullet {
         this.posX = posX+18;
         this.posY = posY-50;
         this.outline = '<img src="../image/bullet.png" style="height: 50px;"></img>';
-        this.bulletHealth = 1;
         this.bulletMove();
     }
 
     bulletMove() {
         setInterval(() => {
-            if(this.bulletHealth > 0) {
-                this.posY -= 15;
-                this.posX += this.xMove;
-            }
+            this.posY -= 15;
+            this.posX += this.xMove;
         }, 5);
     }
 }
@@ -271,7 +269,7 @@ setInterval(() => {
     if(players.length > 0) {
         powerups.push(new Powerup);
     }
-}, 1000);
+}, 15000);
 
 setInterval(() => {
 
@@ -300,15 +298,23 @@ setInterval(() => {
             bullet.forEach((bulletElement) => {
                 enemy.forEach((enemyElement) => {
                     if (bulletElement.posX >= enemyElement.enemyPosx - 50 && bulletElement.posX <= enemyElement.enemyPosx + 50 && bulletElement.posY <= enemyElement.enemyPosy && bulletElement.posY >= enemyElement.enemyPosy - 50) {
-                        bullet[bullet.indexOf(bulletElement)].outline = '<img src="../image/explosion.gif?start=0" style="height: 50px;"></img>';
-                        bullet[bullet.indexOf(bulletElement)].bulletHealth--;
-                        bullet[bullet.indexOf(bulletElement)].posX = enemyElement.enemyPosx;
-                        bullet[bullet.indexOf(bulletElement)].posY = enemyElement.enemyPosy;
+                        // bullet[bullet.indexOf(bulletElement)].outline = '<img src="../image/explosion.gif?start=0" style="height: 50px;"></img>';
+                        // bullet[bullet.indexOf(bulletElement)].bulletHealth--;
+                        // bullet[bullet.indexOf(bulletElement)].posX = enemyElement.enemyPosx;
+                        // bullet[bullet.indexOf(bulletElement)].posY = enemyElement.enemyPosy;
                         enemies[enemies.indexOf(enemyElement)].enemyHealth--;
                         enemies.splice(enemies.indexOf(enemyElement), 1);
-                        setTimeout(() => {
-                            bullet.splice(bullet.indexOf(bulletElement), 1);
-                        }, 400);
+                        // setTimeout(() => {
+                        bullet.splice(bullet.indexOf(bulletElement), 1);
+                        // }, 400);
+
+
+                        // explosions.push([enemyElement.enemyPosx,enemyElement.enemyPosy]);
+                        io.emit('updateExplosion', {
+                            explosions: [enemyElement.enemyPosx+25,enemyElement.enemyPosy+25]
+                        })
+
+                        
                     }
                 })
             });
