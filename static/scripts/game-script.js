@@ -20,7 +20,6 @@ $(document).ready(function () {
         $('.bullet').remove();
         $('.playerStats').remove();
         $('#players-list').empty();
-        // $('#warning').empty();
 
         for(let i=0; i<data.powerups.length; i++) {
             let powerPosX = data.powerups[i].posX;
@@ -95,15 +94,17 @@ $(document).ready(function () {
             player.innerHTML = `<div class="name">Name: ${data.players[index].name}</div>
                                 <div class="health-bar">
                                     <div class="health-level" id="healthLevel" style="width: ${data.players[index].health}%">
-                                        <div class="health-count">Health: ${data.players[index].health}</div>
+                                        <div class="health-count">Health: ${data.players[index].health}%</div>
                                     </div>
                                 </div>
                                 <div class="ammo">Ammo: ${data.players[index].bulletCount}</div>
-                                <div class="power">Firepower: ${data.players[index].power}</div>`;
+                                <div class="power">Firepower: ${data.players[index].power}</div>
+                                <div class="score">Score: ${data.players[index].score}</div>`;
 
             $('#player').append(player);
 
             const warning = document.getElementById('warning');
+            const playAgain = document.getElementById('new-game-btn');
             if(data.players[index].bulletCount == 0 && data.players[index].health != 0) {
                 warning.style.display = 'block'
                 warning.style.color = 'red'
@@ -114,24 +115,42 @@ $(document).ready(function () {
                 warning.style.animation = '';
                 warning.style.color = 'black'
                 warning.innerHTML = "GAME OVER";
+
+                playAgain.style.display = 'block';
             } 
             else {
                 warning.style.display = 'none'
+                playAgain.style.display = 'none';
             }
         }
+
+        
         
         
         for(let i=0; i<data.players.length; i++) {
             const playerList = document.createElement('div');
-            playerList.innerHTML += data.players[i].name + " " + `<div class="health-bar">
-                <div class="health-level" id="healthLevel" style="width: ${data.players[i].health}%"></div>
-            </div>` + " " + data.players[i].bulletCount;
+            playerList.style.display = 'inline-block';
+            playerList.style.padding = '10px';
+            playerList.style.border = '2px solid black';
+            playerList.style.borderRadius = '15px';
+            playerList.style.margin = '0 15px';
+            playerList.innerHTML = `Name: ${data.players[i].name} 
+                                    <div class="health-bar">
+                                        <div class="health-level" id="healthLevel" style="width: ${data.players[i].health}%;">
+                                            <div class="health-count">Health: ${data.players[index].health}%</div>
+                                        </div>
+                                    </div> 
+                                    Score: ${data.players[i].score}`;
         
             $('#players-list').append(playerList);
         }
 
         
     })
+
+    $('#new-game-btn').click(function() {
+        window.location.href = `../`;
+    });
 
     socket.on('reloadDiv', function(data) {
         $('.loader').remove();
@@ -167,8 +186,8 @@ $(document).ready(function () {
         $('#container').append(expl);
 
         setInterval(() => {
-            data.explosions[0]--;
-            data.explosions[1]--;
+            data.explosions[0]-=2;
+            data.explosions[1]-=2;
             expl.style.top = data.explosions[1] + 'px';
             expl.style.left = data.explosions[0] + 'px';
             

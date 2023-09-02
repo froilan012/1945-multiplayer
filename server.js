@@ -47,6 +47,7 @@ class Player {
         this.health = 100;
         this.reloadStatus = false;
         this.power = 1;
+        this.score = 0;
         setInterval(() => {
             this.playerMove();
         }, 5);
@@ -213,11 +214,10 @@ io.on('connection', function (socket) {
         let player = players.findIndex(player => player.id === data.id)
         players[player].reloadStatus = true;
         
-        if(players[player].reloadStatus) {
+        if(players[player].reloadStatus && players[player].health != 0) {
             
             setTimeout(() => {
                 players[player].bulletCount = 20;
-                players[player].outline = `<img src="../image/${players[player].model}.png"></img>`;
                 players[player].reloadStatus = false;
             }, 1000);
         }
@@ -245,8 +245,13 @@ io.on('connection', function (socket) {
         })
     });
 
+    
+
     socket.on('disconnect', function() {
-        players.splice(players.indexOf(socket.id, 1))
+        let index = players.findIndex(function(obj) {
+            return obj.id === socket.id;
+        });
+        players.splice(index, 1)
     })
 
     
@@ -297,18 +302,12 @@ setInterval(() => {
             bullet.forEach((bulletElement) => {
                 enemy.forEach((enemyElement) => {
                     if (bulletElement.posX >= enemyElement.enemyPosx - 50 && bulletElement.posX <= enemyElement.enemyPosx + 50 && bulletElement.posY <= enemyElement.enemyPosy && bulletElement.posY >= enemyElement.enemyPosy - 50) {
-                        // bullet[bullet.indexOf(bulletElement)].outline = '<img src="../image/explosion.gif?start=0" style="height: 50px;"></img>';
-                        // bullet[bullet.indexOf(bulletElement)].bulletHealth--;
-                        // bullet[bullet.indexOf(bulletElement)].posX = enemyElement.enemyPosx;
-                        // bullet[bullet.indexOf(bulletElement)].posY = enemyElement.enemyPosy;
                         enemies[enemies.indexOf(enemyElement)].enemyHealth--;
                         enemies.splice(enemies.indexOf(enemyElement), 1);
-                        // setTimeout(() => {
                         bullet.splice(bullet.indexOf(bulletElement), 1);
-                        // }, 400);
 
+                        players[i].score += 100;
 
-                        // explosions.push([enemyElement.enemyPosx,enemyElement.enemyPosy]);
                         io.emit('updateExplosion', {
                             explosions: [enemyElement.enemyPosx+25,enemyElement.enemyPosy+25]
                         })

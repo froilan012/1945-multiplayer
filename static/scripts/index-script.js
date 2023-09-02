@@ -60,7 +60,7 @@ $(document).ready(function () {
         } 
         else {
             playerName = $("#name").val()
-        window.location.href = `../game.html?name=${playerName}&model=${playerModel}`;
+            window.location.href = `../game.html?name=${playerName}&model=${playerModel}`;
         }
     });
 
