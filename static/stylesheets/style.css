@@ -68,14 +68,80 @@ body {
     padding: 0px;
 }
 
-#player {
+#player, #controls, #enemy-stats, .power-ups {
     z-index: 3;
-    width: 150px;
     position: absolute;
-    top: 10px;
-    left: 10px;
     background-color: #ffffff96;
     padding: 10px;
+}
+
+#player {
+    top: 10px;
+    width: 150px;
+    left: -190px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #00000018;
+}
+
+#controls {
+    top: 10px;
+    right: -148px;
+    padding: 0 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #00000018;
+}
+    #controls p {
+        font-size: 12px;
+        margin: 5px;
+    }
+    #controls p.header {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+
+.power-ups {
+    top: 250px;
+    right: -165px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #00000018;
+}
+
+#enemy-stats {
+    right: -120px;
+    top: 120px;
+    padding: 0 10px 10px 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #00000018;
+}
+    #enemy-stats p.header, .power-ups p.header {
+        font-size: 15px;
+        font-weight: 700;
+        margin: 5px;
+    }
+    #enemy-stats div, .power-ups div {
+        display: flex;
+        
+        align-items: center;
+    }
+    #enemy-stats div {
+        font-size: 20px;
+        justify-content: center;
+    }
+        #enemy-stats div img {
+            height: 25px;
+        }
+
+        .power-ups div img{ 
+            height: 25px;
+        }
+
+h2 {
+    text-align: center;
 }
 
 #players-list {

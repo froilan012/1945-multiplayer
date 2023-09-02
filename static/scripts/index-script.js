@@ -2,6 +2,8 @@ $(document).ready(function () {
 
     let playerName;
     let playerModel;
+
+    //<-------------Background Animation--------------->
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -24,29 +26,29 @@ $(document).ready(function () {
 
         if (backgroundY >= canvas.height) {
             backgroundY = 0;
-        }
+        };
 
         requestAnimationFrame(gameLoop);
-    }
+    };
 
     gameLoop();
+    //<---------------------------->
 
+    //<-------------Event Listeners--------------->
     $(".model img").hover(
-        function() {
+        function () {
             $(this).css('background-color', '#0056b3');
-          },
-          function() {
+        },
+        function() {
             $(this).css('background-color', '');
         }
-    )
+    );
 
-    $(".model img").click(
-        function() {
-            $(".model img").css('border', '4px solid black')
-            $(this).css('border', '4px solid yellow');
-            playerModel = $(this).attr('id')
-        }
-    )
+    $(".model img").click( function () {
+        $(".model img").css('border', '4px solid black')
+        $(this).css('border', '4px solid yellow');
+        playerModel = $(this).attr('id')
+    });
 
     $('#enter-game-btn').click(function() {
         if(playerModel == undefined && $("#name").val() == '') {
@@ -61,9 +63,7 @@ $(document).ready(function () {
         else {
             playerName = $("#name").val()
             window.location.href = `../game.html?name=${playerName}&model=${playerModel}`;
-        }
+        };
     });
-
-    // playerName = $("#name").val()
-    // window.location.href = `../game.html?name=${playerName}&model=${playerModel}`;
+    //<---------------------------->
 })

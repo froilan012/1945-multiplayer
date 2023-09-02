@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Game Page</title>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
@@ -15,18 +15,44 @@
         <div id="player"></div>
         <div id="warning"></div>
         <button id="new-game-btn">Click to play again</button>
+        <div id="controls">
+            <p class="header">Controls</p>
+            <p>Arrow Keys - Move</p>
+            <p>R - Reload</p>
+            <p>Space - Shoot</p>
+        </div>
+        <div id="enemy-stats">
+            <p class="header">Hit counts</p>
+            <div>
+                <img src="../image/enemy1.png" alt="enemy1"> - 1
+            </div>
+            <div>
+                <img src="../image/enemy2.png" alt="enemy2"> - 2
+            </div>
+            <div>
+                <img src="../image/enemy3.png" alt="enemy1"> - 3
+            </div>
+        </div>
+        <div class="power-ups">
+            <p class="header">Power Ups</p>
+            <div>
+                <img src="../image/powerup.png" alt="enemy1"> - +1 Firepower
+            </div>
+            <div>
+                <img src="../image/health.png" alt="enemy2"> - +25 Health
+            </div>
+        </div>
     </div>
     <h2>Players in the lobby:</h2>
     <div id="players-list"></div>
-    <p>Background Photo by Ryo Takemasa on <a href="https://www.behance.net/gallery/67129169/Water-landscapes">behance</a></p>
-    <p>
-        Source for pixel arts
-        https://dinopixel.com/pixel-art/f-15-fighter-jet/20271
-        https://chrismalnu.wordpress.com/2016/02/03/required-asset-list-for-shoot-em-up/
-        https://www.powerupsports.com/pub/c/684a644421a780106cdc0cc9bc0c1c83/img/for-clubs.png
-        https://www.nicepng.com/maxp/u2e6t4t4t4i1o0i1/
-        https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freeiconspng.com%2Fimg%2F45935&psig=AOvVaw32sLayz05sRGb-nlZRfux2&ust=1693723176566000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNCGotSoi4EDFQAAAAAdAAAAABAG
-    </p>
+    <div>Pixel art Sources</div>
+    <a href="https://www.behance.net/gallery/67129169/Water-landscapes">Background</a>
+    <a href="https://dinopixel.com/pixel-art/f-15-fighter-jet/20271">Jet Model 1</a>
+    <a href="https://chrismalnu.wordpress.com/2016/02/03/required-asset-list-for-shoot-em-up/">Jet model 2, 3 and Bullet Icon</a>
+    <a href="https://www.powerupsports.com/pub/c/684a644421a780106cdc0cc9bc0c1c83/img/for-clubs.png">Power Up Icon</a>
+    <a href="https://www.nicepng.com/maxp/u2e6t4t4t4i1o0i1/">Health Icon</a>
+    <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freeiconspng.com%2Fimg%2F45935&psig=AOvVaw32sLayz05sRGb-nlZRfux2&ust=1693723176566000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCNCGotSoi4EDFQAAAAAdAAAAABAG"></a>
+    <a href="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F22024671-jet-plane-with-different-color-in-pixel-art-style&psig=AOvVaw1l_UHhDU_IKVeb-6Ow6XLY&ust=1693744501526000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLiBzIz4i4EDFQAAAAAdAAAAABAK">Enemy Icons</a>
 </body>
 </html>
 
