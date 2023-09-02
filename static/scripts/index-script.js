@@ -1,8 +1,7 @@
 $(document).ready(function () {
 
-    const playerName = "John";
+    let playerName;
     let playerModel;
-
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
@@ -50,10 +49,21 @@ $(document).ready(function () {
     )
 
     $('#enter-game-btn').click(function() {
-        
-        
-
+        if(playerModel == undefined && $("#name").val() == '') {
+            $('#error').html('Enter your name and select an aircraft model');
+        }
+        else if($("#name").val() == '') {
+            $('#error').html('Enter your name');
+        }
+        else if(playerModel == undefined) {
+            $('#error').html('Select an aircraft model');
+        } 
+        else {
+            playerName = $("#name").val()
         window.location.href = `../game.html?name=${playerName}&model=${playerModel}`;
+        }
     });
 
+    // playerName = $("#name").val()
+    // window.location.href = `../game.html?name=${playerName}&model=${playerModel}`;
 })
