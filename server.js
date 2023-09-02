@@ -132,15 +132,22 @@ class Powerup {
     constructor () {
         this.posX = Math.floor(650 * Math.random());
         this.posY = 0;
-        this.outline = `<img src="../image/powerup.png"></img>`;
         this.move();
         this.directionX = Math.random() < 0.5;
         this.directionY = false;
         this.time = 0;
+        
         setInterval(() => {
             this.time += 1;
         }, 1000);
 
+        if(Math.random() > 0.5) {
+            this.outline = `<img src="../image/powerup.png"></img>`;
+            this.type = 'power';
+        } else {
+            this.outline = `<img src="../image/health.png"></img>`;
+            this.type = 'health';
+        }
     }
 
     move() {
@@ -264,7 +271,7 @@ setInterval(() => {
     if(players.length > 0) {
         powerups.push(new Powerup);
     }
-}, 15000);
+}, 1000);
 
 setInterval(() => {
 
@@ -329,11 +336,16 @@ setInterval(() => {
 
                 powerup.forEach(powerupElem => {
                     if (playerElement.iniPosX >= powerupElem.posX - 50 && playerElement.iniPosX <= powerupElem.posX + 50 && playerElement.iniPosY <= powerupElem.posY && playerElement.iniPosY >= powerupElem.posY - 50) {
-                        if(players[player.indexOf(playerElement)].power < 3) {
+                        if(players[player.indexOf(playerElement)].power < 3 && powerups[powerups.indexOf(powerupElem)].type == 'power') {
                             players[player.indexOf(playerElement)].power++;
                         }
-                        
-                        powerup.splice(powerups.indexOf(powerupElem));
+                        else if (players[player.indexOf(playerElement)].health < 75 && powerups[powerups.indexOf(powerupElem)].type == 'health') {
+                            players[player.indexOf(playerElement)].health += 25;
+                        }
+                        else if (powerups[powerups.indexOf(powerupElem)].type == 'health') {
+                            players[player.indexOf(playerElement)].health = 100;
+                        }
+                        powerups.splice(powerups.indexOf(powerupElem), 1);
                     }
                 })
             });
