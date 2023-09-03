@@ -318,47 +318,47 @@ setInterval(() => {
 
     for(let i=0; i<players.length; i++) {
 
-            let enemy = enemies;
-            let player = players;
-            let powerup = powerups;
+        let enemy = enemies;
+        let player = players;
+        let powerup = powerups;
 
-            //Player collision
-            player.forEach((playerElement) => {
-                enemy.forEach((enemyElement) => {
-                    if (playerElement.iniPosX >= enemyElement.enemyPosx - 40 && playerElement.iniPosX <= enemyElement.enemyPosx + 40 && playerElement.iniPosY <= enemyElement.enemyPosy && playerElement.iniPosY >= enemyElement.enemyPosy - 40) {
-                        players[player.indexOf(playerElement)].health -= 5;
-                        if(players[player.indexOf(playerElement)].health == 0) {
-                            io.emit('updateExplosion', {
-                                explosions: [players[player.indexOf(playerElement)].iniPosX+25,players[player.indexOf(playerElement)].iniPosY+25]
-                            });
-
-                            players[player.indexOf(playerElement)].outline = "";
-                            players[player.indexOf(playerElement)].iniPosY = 720;
-                            players[player.indexOf(playerElement)].iniPosX = 0;
-                            
-                        };
+        //Player collision
+        player.forEach((playerElement) => {
+            enemy.forEach((enemyElement) => {
+                if (playerElement.iniPosX >= enemyElement.enemyPosx - 40 && playerElement.iniPosX <= enemyElement.enemyPosx + 40 && playerElement.iniPosY <= enemyElement.enemyPosy && playerElement.iniPosY >= enemyElement.enemyPosy - 40) {
+                    players[player.indexOf(playerElement)].health -= 5;
+                    if(players[player.indexOf(playerElement)].health == 0) {
                         io.emit('updateExplosion', {
-                            explosions: [enemyElement.enemyPosx+25,enemyElement.enemyPosy+25]
+                            explosions: [players[player.indexOf(playerElement)].iniPosX+25,players[player.indexOf(playerElement)].iniPosY+25]
                         });
-                        enemies.splice(enemies.indexOf(enemyElement), 1)
-                    };
-                });
 
-                powerup.forEach(powerupElem => {
-                    if (playerElement.iniPosX >= powerupElem.posX - 40 && playerElement.iniPosX <= powerupElem.posX + 40 && playerElement.iniPosY <= powerupElem.posY && playerElement.iniPosY >= powerupElem.posY - 40) {
-                        if(players[player.indexOf(playerElement)].power < 3 && powerups[powerups.indexOf(powerupElem)].type == 'power') {
-                            players[player.indexOf(playerElement)].power++;
-                        }
-                        else if (players[player.indexOf(playerElement)].health < 75 && powerups[powerups.indexOf(powerupElem)].type == 'health') {
-                            players[player.indexOf(playerElement)].health += 25;
-                        }
-                        else if (powerups[powerups.indexOf(powerupElem)].type == 'health') {
-                            players[player.indexOf(playerElement)].health = 100;
-                        }
-                        powerups.splice(powerups.indexOf(powerupElem), 1);
+                        players[player.indexOf(playerElement)].outline = "";
+                        players[player.indexOf(playerElement)].iniPosY = 720;
+                        players[player.indexOf(playerElement)].iniPosX = 0;
+                        
                     };
-                });
+                    io.emit('updateExplosion', {
+                        explosions: [enemyElement.enemyPosx+25,enemyElement.enemyPosy+25]
+                    });
+                    enemies.splice(enemies.indexOf(enemyElement), 1)
+                };
             });
+
+            powerup.forEach(powerupElem => {
+                if (playerElement.iniPosX >= powerupElem.posX - 40 && playerElement.iniPosX <= powerupElem.posX + 40 && playerElement.iniPosY <= powerupElem.posY && playerElement.iniPosY >= powerupElem.posY - 40) {
+                    if(players[player.indexOf(playerElement)].power < 3 && powerups[powerups.indexOf(powerupElem)].type == 'power') {
+                        players[player.indexOf(playerElement)].power++;
+                    }
+                    else if (players[player.indexOf(playerElement)].health < 75 && powerups[powerups.indexOf(powerupElem)].type == 'health') {
+                        players[player.indexOf(playerElement)].health += 25;
+                    }
+                    else if (powerups[powerups.indexOf(powerupElem)].type == 'health') {
+                        players[player.indexOf(playerElement)].health = 100;
+                    }
+                    powerups.splice(powerups.indexOf(powerupElem), 1);
+                };
+            });
+        });
     };
 
     for(let i=0; i<enemies.length; i++) {
