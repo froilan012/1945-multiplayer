@@ -184,7 +184,6 @@ $(document).ready(function () {
         };
     });
 
-
     socket.on('updateExplosion', function(data) {
         const expl = document.createElement('img');
         expl.setAttribute('class', 'explosion');

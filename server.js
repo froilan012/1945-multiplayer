@@ -299,7 +299,7 @@ setInterval(() => {
 
             bullet.forEach((bulletElement) => {
                 enemy.forEach((enemyElement) => {
-                    if (bulletElement.posX >= enemyElement.enemyPosx - 50 && bulletElement.posX <= enemyElement.enemyPosx + 50 && bulletElement.posY <= enemyElement.enemyPosy && bulletElement.posY >= enemyElement.enemyPosy - 50) {
+                    if (bulletElement.posX >= enemyElement.enemyPosx - 40 && bulletElement.posX <= enemyElement.enemyPosx + 40 && bulletElement.posY <= enemyElement.enemyPosy && bulletElement.posY >= enemyElement.enemyPosy - 40) {
                         enemies[enemies.indexOf(enemyElement)].enemyHealth--;
                         if(enemies[enemies.indexOf(enemyElement)].enemyHealth == 0) {
                             enemies.splice(enemies.indexOf(enemyElement), 1);
@@ -310,12 +310,6 @@ setInterval(() => {
                         };
                         
                         bullet.splice(bullet.indexOf(bulletElement), 1);
-
-                        
-
-                        
-
-                        
                     };
                 });
             });
@@ -331,7 +325,7 @@ setInterval(() => {
             //Player collision
             player.forEach((playerElement) => {
                 enemy.forEach((enemyElement) => {
-                    if (playerElement.iniPosX >= enemyElement.enemyPosx - 50 && playerElement.iniPosX <= enemyElement.enemyPosx + 50 && playerElement.iniPosY <= enemyElement.enemyPosy && playerElement.iniPosY >= enemyElement.enemyPosy - 50) {
+                    if (playerElement.iniPosX >= enemyElement.enemyPosx - 40 && playerElement.iniPosX <= enemyElement.enemyPosx + 40 && playerElement.iniPosY <= enemyElement.enemyPosy && playerElement.iniPosY >= enemyElement.enemyPosy - 40) {
                         players[player.indexOf(playerElement)].health -= 5;
                         if(players[player.indexOf(playerElement)].health == 0) {
                             io.emit('updateExplosion', {
@@ -351,7 +345,7 @@ setInterval(() => {
                 });
 
                 powerup.forEach(powerupElem => {
-                    if (playerElement.iniPosX >= powerupElem.posX - 50 && playerElement.iniPosX <= powerupElem.posX + 50 && playerElement.iniPosY <= powerupElem.posY && playerElement.iniPosY >= powerupElem.posY - 50) {
+                    if (playerElement.iniPosX >= powerupElem.posX - 40 && playerElement.iniPosX <= powerupElem.posX + 40 && playerElement.iniPosY <= powerupElem.posY && playerElement.iniPosY >= powerupElem.posY - 40) {
                         if(players[player.indexOf(playerElement)].power < 3 && powerups[powerups.indexOf(powerupElem)].type == 'power') {
                             players[player.indexOf(playerElement)].power++;
                         }
