@@ -148,7 +148,7 @@ $(document).ready(function () {
             playerList.innerHTML = `Name: ${data.players[i].name} 
                                     <div class="health-bar">
                                         <div class="health-level" id="healthLevel" style="width: ${data.players[i].health}%;">
-                                            <div class="health-count">Health: ${data.players[index].health}%</div>
+                                            <div class="health-count">Health: ${data.players[i].health}%</div>
                                         </div>
                                     </div> 
                                     Score: ${data.players[i].score}`;
