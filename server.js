@@ -101,7 +101,7 @@ class Enemy {
         this.swing();
         setInterval(() => {
             this.enemyMove = Math.ceil(3 * Math.random());
-        }, 500);
+        }, 250 + Math.ceil(250 * Math.random()));
         this.speed = 3 + Math.ceil(3 * Math.random());
     };
 
@@ -264,6 +264,8 @@ setInterval(() => {
                 enemies.push(new Enemy);
             };
         }, 3000);
+    } else {
+        enemies.splice(0, enemies.length);
     };
 }, 500);
 

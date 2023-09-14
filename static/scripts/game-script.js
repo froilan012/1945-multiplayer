@@ -56,6 +56,15 @@ $(document).ready(function () {
             shadow.style.top = data.enemies[i].enemyPosy + 35 + 'px';
             shadow.style.position = 'absolute';
 
+            if(data.enemies[i].enemyMove == 1) {
+                enemy.style.transform = "skewY(10deg)"
+                shadow.style.transform = "skewY(10deg)"
+            }
+            else if(data.enemies[i].enemyMove == 2) {
+                enemy.style.transform = "skewY(-10deg)"
+                shadow.style.transform = "skewY(-10deg)"
+            }
+
             if(data.enemies[i].enemyPosy < 650) {
                 $('#container').append(shadow);
             };
