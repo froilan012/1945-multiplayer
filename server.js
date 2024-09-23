@@ -36,7 +36,7 @@ class Player {
         this.name = name;
         this.model = model;
         this.outline =  `<img src="../image/${this.model}.png"></img>`;
-        this.iniPosX;
+        this.iniPosX = 0;
         this.iniPosY = 640;
         this.bullets = [];
         this.directionLeft = false; 
@@ -85,6 +85,12 @@ class Player {
         }
         else if (this.health > 0 && this.power == 3) {
             this.bullets.push(new Bullet(this.iniPosX, this.iniPosY, this.power, 0));
+            this.bullets.push(new Bullet(this.iniPosX-15, this.iniPosY, this.power, -5));
+            this.bullets.push(new Bullet(this.iniPosX+15, this.iniPosY, this.power, 5));
+        }
+        else if (this.health > 0 && this.power == 4) {
+            this.bullets.push(new Bullet(this.iniPosX-15, this.iniPosY, this.power, 0));
+            this.bullets.push(new Bullet(this.iniPosX+15, this.iniPosY, this.power, 0));
             this.bullets.push(new Bullet(this.iniPosX-15, this.iniPosY, this.power, -5));
             this.bullets.push(new Bullet(this.iniPosX+15, this.iniPosY, this.power, 5));
         };
@@ -155,7 +161,7 @@ class Powerup {
                 this.posY -= 3;
             }
 
-            if(this.posY > 300) {
+            if(this.posY > 600) {
                 this.directionY = true;
             }
             else if(this.posY < 10) {
@@ -256,24 +262,24 @@ io.on('connection', function (socket) {
 // <--------------------------------->
 
 // <------Object Creation intervals and animation ------->
-setInterval(() => {
-    let count = Math.ceil(3 * Math.random());
-    if(players.length > 0) {
-        setTimeout(() => {
-            for(i=0; i<count; i++) {
-                enemies.push(new Enemy);
-            };
-        }, 3000);
-    } else {
-        enemies.splice(0, enemies.length);
-    };
-}, 500);
+// setInterval(() => {
+//     let count = Math.ceil(3 * Math.random());
+//     if(players.length > 0) {
+//         setTimeout(() => {
+//             for(i=0; i<count; i++) {
+//                 enemies.push(new Enemy);
+//             };
+//         }, 3000);
+//     } else {
+//         enemies.splice(0, enemies.length);
+//     };
+// }, 500);
 
 setInterval(() => {
     if(players.length > 0) {
         powerups.push(new Powerup);
     }
-}, 15000);
+}, 1000);
 
 setInterval(() => {
 
@@ -348,7 +354,7 @@ setInterval(() => {
 
             powerup.forEach(powerupElem => {
                 if (playerElement.iniPosX >= powerupElem.posX - 40 && playerElement.iniPosX <= powerupElem.posX + 40 && playerElement.iniPosY <= powerupElem.posY && playerElement.iniPosY >= powerupElem.posY - 40) {
-                    if(players[player.indexOf(playerElement)].power < 3 && powerups[powerups.indexOf(powerupElem)].type == 'power') {
+                    if(players[player.indexOf(playerElement)].power < 4 && powerups[powerups.indexOf(powerupElem)].type == 'power') {
                         players[player.indexOf(playerElement)].power++;
                     }
                     else if (players[player.indexOf(playerElement)].health < 75 && powerups[powerups.indexOf(powerupElem)].type == 'health') {

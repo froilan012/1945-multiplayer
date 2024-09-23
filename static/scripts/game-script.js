@@ -32,8 +32,15 @@ $(document).ready(function () {
             powerUp.setAttribute('class', 'powerup');
             powerUp.style.position = 'absolute';
             powerUp.innerHTML = data.powerups[i].outline;
-            powerUp.style.top = powerPosY + 'px'
-            powerUp.style.left = powerPosX + 'px'
+            powerUp.style.top = powerPosY + 'px';
+            powerUp.style.left = powerPosX + 'px';
+            powerUp.style.padding = '0px';
+
+            if (data.powerups[i].type == 'power') {
+                powerUp.style.outline = '3px solid yellow';
+                powerUp.style.borderRadius = '25px';
+            }
+
             $('#container').append(powerUp);
         };
 
@@ -46,8 +53,8 @@ $(document).ready(function () {
             enemy.setAttribute('class','enemy');
             enemy.style.position = 'absolute';
             enemy.innerHTML =   data.enemies[i].outline;
-            enemy.style.top = enemyPosy + 'px'
-            enemy.style.left = enemyPosx + 'px'
+            enemy.style.top = enemyPosy + 'px';
+            enemy.style.left = enemyPosx + 'px';
 
             const shadow = document.createElement('div');
             shadow.setAttribute('class','shadow');
@@ -57,12 +64,12 @@ $(document).ready(function () {
             shadow.style.position = 'absolute';
 
             if(data.enemies[i].enemyMove == 1) {
-                enemy.style.transform = "skewY(10deg)"
-                shadow.style.transform = "skewY(10deg)"
+                enemy.style.transform = "skewY(10deg)";
+                shadow.style.transform = "skewY(10deg)";
             }
             else if(data.enemies[i].enemyMove == 2) {
-                enemy.style.transform = "skewY(-10deg)"
-                shadow.style.transform = "skewY(-10deg)"
+                enemy.style.transform = "skewY(-10deg)";
+                shadow.style.transform = "skewY(-10deg)";
             }
 
             if(data.enemies[i].enemyPosy < 650) {
