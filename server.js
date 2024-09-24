@@ -8,7 +8,7 @@ let players = [];
 let powerups = [];
 let boss = [];
 let stage = 1;
-const initStageTimer = 1;
+const initStageTimer = 45;
 let stageTimer = initStageTimer;
 
 var bodyParser = require('body-parser');
@@ -140,7 +140,7 @@ class Boss {
     constructor() {
         this.bossPosx = 280;
         this.bossPosy = -250;
-        this.bossHealth = 50;
+        this.bossHealth = 50 * stage;
         this.outline =  `<img src="../image/boss1.png"></img>`;
         this.bossYDirection = 2;
         this.bossBullets = [];
@@ -574,7 +574,16 @@ setInterval(() => {
         enemies: enemies,
         players: players,
         powerups: powerups,
-        boss: boss
+        boss: boss,
+        stageTimer: stageTimer,
+        stage: stage
     });
 }, 10);
+
+setInterval(() => {
+    io.emit('updateStage', {
+        stageTimer: stageTimer,
+        stage: stage
+    })
+}, 1000);
 // <--------------------------------->

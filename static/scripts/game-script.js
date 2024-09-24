@@ -10,8 +10,19 @@ $(document).ready(function () {
     //<-------------Socket Events--------------->
     socket.emit('got_a_new_player', {name: playerName, model: playerModel});
 
-    socket.on('updateAllContainer', function (data) {
+    socket.on('updateStage', function (data) {
+        $('#timer').html(
+            `<div class="name">Stage: ${data.stage}</div>
+             <div class="name">Timer: ${data.stageTimer}</div>`
+             );
+        $('#boss-alert').html("Boss Incoming!!!")
+        setInterval(() => {
+            $('#boss-alert').fadeIn(500).fadeOut(500)
+        }, 100);
+        
+    })
 
+    socket.on('updateAllContainer', function (data) {
         let index = data.players.findIndex(function(obj) {
             return obj.id === socket.id;
         });
@@ -24,6 +35,14 @@ $(document).ready(function () {
         $('.boss').remove();
         $('.playerStats').remove();
         $('#players-list').empty();
+
+        if (data.stageTimer <= 5 && data.stageTimer >= 1) {
+            $('#boss-alert').css('display', 'block')
+        } else {
+            $('#boss-alert').css('display', 'none')
+        }
+
+        
 
         for(let i=0; i<data.powerups.length; i++) {
             let powerPosX = data.powerups[i].posX;
@@ -80,10 +99,20 @@ $(document).ready(function () {
             $('#container').append(enemy);
         };
 
+        if (data.boss.length == 1) {
+            $('#boss-health').css('display', 'block')
+        } else {
+            $('#boss-health').css('display', 'none')
+        }
+
         for(let i=0; i<data.boss.length; i++) {
             let bossPosx = data.boss[i].bossPosx;
             let bossPosy = data.boss[i].bossPosy;
-            
+
+            $('#boss-health').html(
+                                    `<div class="health-level" id="healthLevel" style="width: ${data.boss[i].bossHealth/(50*data.stage) * 100}%;">
+                                        <div class="boss-health-count">Boss Health: ${data.boss[i].bossHealth}</div>
+                                    </div>`)
             const boss = document.createElement('div');
             boss.setAttribute('id','boss');
             boss.setAttribute('class','boss');
@@ -92,6 +121,8 @@ $(document).ready(function () {
             boss.style.top = bossPosy + 'px';
             boss.style.left = bossPosx + 'px';
             boss.style.zIndex = 2;
+
+            
 
             for(j=0; j<data.boss[i].bossBullets.length; j++) {
                 const bossBullet = document.createElement('div');
@@ -272,7 +303,6 @@ $(document).ready(function () {
                 expl.style.left = data.explosions[0] + 'px';
             } else {
                 data.explosions[1]-=2;
-                // data.explosions[0]-=2;
                 expl.style.top = data.explosions[1] + 'px';
                 expl.style.left = data.explosions[0] + 'px';
             }
