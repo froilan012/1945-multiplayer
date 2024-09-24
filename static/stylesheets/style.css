@@ -39,6 +39,7 @@ body {
     border: 10px solid black;
     position: relative;
     z-index: 2;
+    overflow: hidden;
 }
 
 .player {
@@ -89,17 +90,17 @@ body {
 }
 
 #player {
-    top: 10px;
-    width: 150px;
-    left: -190px;
+    top: 20px;
+    width: 125px;
+    left: calc(50vw - 515px);
     border: 1px solid black;
     border-radius: 10px;
     background-color: #00000018;
 }
 
 #controls {
-    top: 10px;
-    right: -148px;
+    top: 20px;
+    right: calc(50vw - 500px);
     padding: 0 10px;
     border: 1px solid black;
     border-radius: 10px;
@@ -117,15 +118,15 @@ body {
 
 .power-ups {
     top: 250px;
-    right: -165px;
+    right: calc(50vw - 515px);
     border: 1px solid black;
     border-radius: 10px;
     background-color: #00000018;
 }
 
 #enemy-stats {
-    right: -120px;
-    top: 120px;
+    right: calc(50vw - 470px);
+    top: 125px;
     padding: 0 10px 10px 10px;
     border: 1px solid black;
     border-radius: 10px;
@@ -186,7 +187,7 @@ h2 {
   
 
 .health-bar {
-    width: 150px;
+    width: 125px;
     height: 15px;
     border: 1px solid #000;
     position: relative;
@@ -202,14 +203,12 @@ h2 {
 }
 
 .health-count {
-    width: 150px;
+    width: 125px;
     z-index: 3;
 }
 
 .shadow img {
-    width: 35px;
-    height: 35px;
-    filter: grayscale(10%) brightness(5%);
+    filter: grayscale(10%) brightness(20%);
 }
 
 

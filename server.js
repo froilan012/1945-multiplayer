@@ -6,6 +6,10 @@ const io = require('socket.io')(server);
 let enemies = [];
 let players = [];
 let powerups = [];
+let boss = [];
+let stage = 1;
+const initStageTimer = 1;
+let stageTimer = initStageTimer;
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -49,6 +53,7 @@ class Player {
         this.reloadStatus = false;
         this.power = 1;
         this.score = 0;
+        this.shield = 0;
         setInterval(() => {
             this.playerMove();
         }, 5);
@@ -128,6 +133,88 @@ class Enemy {
                 this.enemyPosx -= 5;
             }
         }, 10);
+    };
+};
+
+class Boss {
+    constructor() {
+        this.bossPosx = 280;
+        this.bossPosy = -250;
+        this.bossHealth = 50;
+        this.outline =  `<img src="../image/boss1.png"></img>`;
+        this.bossYDirection = 2;
+        this.bossBullets = [];
+        this.move();
+        this.swing();
+        this.attack();
+        setInterval(() => {
+            this.bossMove = Math.ceil(3 * Math.random());
+        }, 500);
+        this.speed = 3 + Math.ceil(3 * Math.random());
+        
+        
+        setInterval(() => {
+            this.bossYDirection = Math.floor(3 * Math.random());;
+        }, 750);
+        
+    };
+
+    move() {
+        setInterval(() => {
+            if(this.bossHealth > 0 && this.bossPosy >= 300) {
+                this.bossYDirection = 0;
+            }
+            else if(this.bossHealth > 0 && this.bossPosy <= 0) {
+                this.bossYDirection = 1;
+            }
+
+            if(this.bossHealth > 0 && this.bossYDirection == 1) {
+                this.bossPosy += 5;
+            }
+            else if(this.bossHealth > 0 && this.bossYDirection == 0) {
+                this.bossPosy -= 5;
+            }
+        }, 10);
+    };
+
+    swing() {
+        setInterval(() => {
+            if(this.bossMove == 1 && this.bossPosx < 530 && this.bossHealth > 0) {
+                this.bossPosx += 5;
+            }
+            if(this.bossMove == 2 && this.bossPosx > 0 && this.bossHealth > 0) {
+                this.bossPosx -= 5;
+            }
+        }, 10);
+    };
+
+    attack() {
+        setInterval(() => {
+            this.bossBullets.push(new BossBullet(this.bossPosx+55, this.bossPosy+110, 0))
+            this.bossBullets.push(new BossBullet(this.bossPosx+55, this.bossPosy+110, 2.5))
+            this.bossBullets.push(new BossBullet(this.bossPosx+55, this.bossPosy+110, -2.5))
+            this.bossBullets.push(new BossBullet(this.bossPosx+55, this.bossPosy+110, 5))
+            this.bossBullets.push(new BossBullet(this.bossPosx+55, this.bossPosy+110, -5))
+        }, 1000)
+        
+    }
+};
+
+class BossBullet {
+    constructor(posX, posY, xMove) {
+        this.power = stage * 5;
+        this.xMove = xMove;
+        this.posX = posX+18;
+        this.posY = posY-50;
+        this.outline = '<img src="../image/bossbullet.png" style="height: 50px;"></img>';
+        this.bulletMove();
+    };
+
+    bulletMove() {
+        setInterval(() => {
+            this.posY += 6;
+            this.posX += this.xMove;
+        }, 5);
     };
 };
 
@@ -262,24 +349,47 @@ io.on('connection', function (socket) {
 // <--------------------------------->
 
 // <------Object Creation intervals and animation ------->
-// setInterval(() => {
-//     let count = Math.ceil(3 * Math.random());
-//     if(players.length > 0) {
-//         setTimeout(() => {
-//             for(i=0; i<count; i++) {
-//                 enemies.push(new Enemy);
-//             };
-//         }, 3000);
-//     } else {
-//         enemies.splice(0, enemies.length);
-//     };
-// }, 500);
+
+setInterval(() => {
+    if (boss.length == 0) {
+        let count = Math.ceil(stage * Math.random());
+        if (players.length > 0) {
+            setTimeout(() => {
+                for (i=0; i<count; i++) {
+                    enemies.push(new Enemy);
+                };
+            }, 3000);
+        }
+        else {
+            enemies.splice(0, enemies.length);
+            
+        };
+    }
+    else if (players.length == 0) {
+        stageTimer = initStageTimer;
+        stage = 1;
+        boss = [];
+        powerups = [];
+    }
+}, 500);
+
+setInterval(() => {
+    if(stageTimer != 0 && players.length != 0) {
+        stageTimer--;
+    }
+}, 1000);
+
+setInterval(() => {
+    if(stageTimer == 0 && boss.length == 0 && players.length != 0) {
+        boss.push(new Boss);
+    }
+}, 500);
 
 setInterval(() => {
     if(players.length > 0) {
         powerups.push(new Powerup);
     }
-}, 1000);
+}, 5000);
 
 setInterval(() => {
 
@@ -303,21 +413,81 @@ setInterval(() => {
             }
 
             let enemy = enemies;
+            let bosses = boss;
             let bullet = players[i].bullets;
 
             bullet.forEach((bulletElement) => {
                 enemy.forEach((enemyElement) => {
-                    if (bulletElement.posX >= enemyElement.enemyPosx - 40 && bulletElement.posX <= enemyElement.enemyPosx + 40 && bulletElement.posY <= enemyElement.enemyPosy && bulletElement.posY >= enemyElement.enemyPosy - 40) {
+                    if (bulletElement.posX >= enemyElement.enemyPosx - 40 && bulletElement.posX <= enemyElement.enemyPosx + 40 && bulletElement.posY <= enemyElement.enemyPosy && bulletElement.posY >= enemyElement.enemyPosy - 300) {
                         enemies[enemies.indexOf(enemyElement)].enemyHealth--;
                         if(enemies[enemies.indexOf(enemyElement)].enemyHealth == 0) {
                             enemies.splice(enemies.indexOf(enemyElement), 1);
                             io.emit('updateExplosion', {
-                                explosions: [enemyElement.enemyPosx+25,enemyElement.enemyPosy+25]
+                                explosions: [enemyElement.enemyPosx+25,enemyElement.enemyPosy+25,50,50,"small"]
                             })
                             players[i].score += 100;
                         };
                         
                         bullet.splice(bullet.indexOf(bulletElement), 1);
+                    };
+                });
+
+                bosses.forEach((bossElement) => {
+                    if (bulletElement.posX >= bossElement.bossPosx + 5 && bulletElement.posX <= bossElement.bossPosx + 155 && bulletElement.posY <= bossElement.bossPosy + 150 && bulletElement.posY >= bossElement.bossPosy) {
+                        bosses[bosses.indexOf(bossElement)].bossHealth--;
+                        players[i].score += 100;
+                        if(bosses[bosses.indexOf(bossElement)].bossHealth == 0) {
+                            boss.splice(boss.indexOf(bossElement), 1);
+                            io.emit('updateExplosion', {
+                                explosions: [bossElement.bossPosx-50,bossElement.bossPosy+250,300,300,"big"]
+                            })
+                            stage++;
+                            stageTimer = initStageTimer;
+                        };
+                        
+                        bullet.splice(bullet.indexOf(bulletElement), 1);
+                    };
+                });
+
+            });
+        };
+    };
+
+    for(let i=0; i<boss.length; i++) {
+        for(let j=0; j<boss[i].bossBullets.length; j++) {
+            if(boss[i].bossBullets[j].posY > 645) {
+                boss[i].bossBullets.splice(j, 1)
+            }
+            else if (boss[i].bossBullets[j].posX < -5) {
+                boss[i].bossBullets.splice(j, 1)
+            }
+            else if (boss[i].bossBullets[j].posX > 690) {
+                boss[i].bossBullets.splice(j, 1)
+            }
+
+            let player = players;
+            let bossBullet = boss[i].bossBullets;
+
+            
+
+            player.forEach((playerElement) => {
+                bossBullet.forEach((bossBullet) => {
+                    if (playerElement.iniPosX >= bossBullet.posX - 45 && playerElement.iniPosX <= bossBullet.posX + 15 && playerElement.iniPosY <= bossBullet.posY && playerElement.iniPosY >= bossBullet.posY - 15) {
+                        players[player.indexOf(playerElement)].health -= bossBullet.power;
+                        if(players[player.indexOf(playerElement)].health <= 0) {
+                            io.emit('updateExplosion', {
+                                explosions: [players[player.indexOf(playerElement)].iniPosX+25,players[player.indexOf(playerElement)].iniPosY+25]
+                            });
+    
+                            players[player.indexOf(playerElement)].outline = "";
+                            players[player.indexOf(playerElement)].iniPosY = 720;
+                            players[player.indexOf(playerElement)].iniPosX = 0;
+                            players[player.indexOf(playerElement)].health = 0;
+                        };
+                        io.emit('updateExplosion', {
+                            explosions: [bossBullet.posX+25,bossBullet.posY+25]
+                        });
+                        boss[i].bossBullets.splice(boss[i].bossBullets.indexOf(bossBullet), 1)
                     };
                 });
             });
@@ -329,6 +499,7 @@ setInterval(() => {
         let enemy = enemies;
         let player = players;
         let powerup = powerups;
+        let bosses = boss;
 
         //Player collision
         player.forEach((playerElement) => {
@@ -366,6 +537,30 @@ setInterval(() => {
                     powerups.splice(powerups.indexOf(powerupElem), 1);
                 };
             });
+
+            bosses.forEach((bossElement) => {
+                if (playerElement.iniPosX >= bossElement.bossPosx - 35 && playerElement.iniPosX <= bossElement.bossPosx + 155 && playerElement.iniPosY <= bossElement.bossPosy + 250 && playerElement.iniPosY >= bossElement.bossPosy + 50) {
+                    if (players[player.indexOf(playerElement)].shield == 0) {
+                        players[player.indexOf(playerElement)].health -= 5;
+                        players[player.indexOf(playerElement)].shield = 1;
+                        setTimeout(() => {
+                            players[player.indexOf(playerElement)].shield = 0;
+                        }, 1000);
+                    }
+                    
+                    
+                    if(players[player.indexOf(playerElement)].health == 0) {
+                        io.emit('updateExplosion', {
+                            explosions: [players[player.indexOf(playerElement)].iniPosX+25,players[player.indexOf(playerElement)].iniPosY+25]
+                        });
+
+                        players[player.indexOf(playerElement)].outline = "";
+                        players[player.indexOf(playerElement)].iniPosY = 720;
+                        players[player.indexOf(playerElement)].iniPosX = 0;
+                        
+                    };
+                };
+            });
         });
     };
 
@@ -378,7 +573,8 @@ setInterval(() => {
     io.emit('updateAllContainer', {
         enemies: enemies,
         players: players,
-        powerups: powerups
+        powerups: powerups,
+        boss: boss
     });
 }, 10);
 // <--------------------------------->

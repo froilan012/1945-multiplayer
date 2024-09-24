@@ -21,6 +21,7 @@ $(document).ready(function () {
         $('.player').remove();
         $('.shadow').remove();
         $('.bullet').remove();
+        $('.boss').remove();
         $('.playerStats').remove();
         $('#players-list').empty();
 
@@ -59,7 +60,7 @@ $(document).ready(function () {
             const shadow = document.createElement('div');
             shadow.setAttribute('class','shadow');
             shadow.innerHTML =  data.enemies[i].outline;
-            shadow.style.left = data.enemies[i].enemyPosx + 7 + 'px';
+            shadow.style.left = data.enemies[i].enemyPosx + 'px';
             shadow.style.top = data.enemies[i].enemyPosy + 35 + 'px';
             shadow.style.position = 'absolute';
 
@@ -79,6 +80,55 @@ $(document).ready(function () {
             $('#container').append(enemy);
         };
 
+        for(let i=0; i<data.boss.length; i++) {
+            let bossPosx = data.boss[i].bossPosx;
+            let bossPosy = data.boss[i].bossPosy;
+            
+            const boss = document.createElement('div');
+            boss.setAttribute('id','boss');
+            boss.setAttribute('class','boss');
+            boss.style.position = 'absolute';
+            boss.innerHTML =   data.boss[i].outline;
+            boss.style.top = bossPosy + 'px';
+            boss.style.left = bossPosx + 'px';
+            boss.style.zIndex = 2;
+
+            for(j=0; j<data.boss[i].bossBullets.length; j++) {
+                const bossBullet = document.createElement('div');
+                bossBullet.setAttribute('class','bullet');
+                bossBullet.style.width = '50px'
+                bossBullet.style.position = 'absolute';
+                bossBullet.innerHTML = data.boss[i].bossBullets[j].outline;
+                bossBullet.style.top = data.boss[i].bossBullets[j].posY + 'px';
+                bossBullet.style.left = data.boss[i].bossBullets[j].posX + 'px';
+                bossBullet.style.transform = "rotate("+ data.boss[i].bossBullets[j].xMove * -5 +"deg)";
+                $('#container').append(bossBullet);
+            }
+
+            const bossShadow = document.createElement('div');
+            bossShadow.setAttribute('class','shadow');
+            bossShadow.innerHTML =  data.boss[i].outline;
+            bossShadow.style.left = data.boss[i].bossPosx + 'px';
+            bossShadow.style.top = data.boss[i].bossPosy + 25 + 'px';
+            bossShadow.style.width = '250px';
+            bossShadow.style.position = 'absolute';
+
+            if(data.boss[i].bossMove == 1) {
+                boss.style.transform = "skewY(10deg)";
+                bossShadow.style.transform = "skewY(10deg)";
+            }
+            else if(data.boss[i].bossMove == 2) {
+                boss.style.transform = "skewY(-10deg)";
+                bossShadow.style.transform = "skewY(-10deg)";
+            }
+
+            if(data.boss[i].bossPosy < 650) {
+                $('#container').append(bossShadow);
+            };
+            
+            $('#container').append(boss);
+        };
+
         
         for(let i=0; i<data.players.length; i++) {
             const player = document.createElement('div');
@@ -92,7 +142,7 @@ $(document).ready(function () {
             const shadow = document.createElement('div');
             shadow.setAttribute('class','shadow');
             shadow.innerHTML =  data.players[i].outline;
-            shadow.style.left = data.players[i].iniPosX + 7 + 'px';
+            shadow.style.left = data.players[i].iniPosX + 'px';
             shadow.style.top = data.players[i].iniPosY + 35 + 'px';
             shadow.style.position = 'absolute';
             
@@ -135,6 +185,8 @@ $(document).ready(function () {
 
             const warning = document.getElementById('warning');
             const playAgain = document.getElementById('new-game-btn');
+            warning.style.zIndex = 3;
+            playAgain.style.zIndex = 3;
             if(data.players[index].bulletCount == 0 && data.players[index].health != 0) {
                 warning.style.display = 'block'
                 warning.style.color = 'red'
@@ -143,7 +195,7 @@ $(document).ready(function () {
             } else if (data.players[index].health == 0){
                 warning.style.display = 'block'
                 warning.style.animation = '';
-                warning.style.color = 'black'
+                warning.style.color = 'black';
                 warning.innerHTML = "GAME OVER";
 
                 playAgain.style.display = 'block';
@@ -205,18 +257,34 @@ $(document).ready(function () {
         expl.setAttribute('class', 'explosion');
         expl.src = "../image/explosion.png";
         $('#container').append(expl);
+        let timeout = 0;
+
+        if (data.explosions[4] == "big") {
+            timeout = 1000;
+        } else {
+            timeout = 250;
+        }
 
         setInterval(() => {
-            data.explosions[0]-=2;
-            data.explosions[1]-=2;
-            expl.style.top = data.explosions[1] + 'px';
-            expl.style.left = data.explosions[0] + 'px';
+            if (data.explosions[4] == "big") {
+                data.explosions[1]-=2;
+                expl.style.top = data.explosions[1] + 'px';
+                expl.style.left = data.explosions[0] + 'px';
+            } else {
+                data.explosions[1]-=2;
+                // data.explosions[0]-=2;
+                expl.style.top = data.explosions[1] + 'px';
+                expl.style.left = data.explosions[0] + 'px';
+            }
             
-        }, 50);
+            
+            expl.style.width = data.explosions[2] + 'px';
+            expl.style.height = data.explosions[3] + 'px';
+        }, 10);
 
         setTimeout(() => {
             $(expl).remove();
-        }, 300);
+        }, timeout);
 
     });
     //<---------------------------->
