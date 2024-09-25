@@ -42,8 +42,6 @@ $(document).ready(function () {
             $('#boss-alert').css('display', 'none')
         }
 
-        
-
         for(let i=0; i<data.powerups.length; i++) {
             let powerPosX = data.powerups[i].posX;
             let powerPosY = data.powerups[i].posY;
@@ -122,8 +120,6 @@ $(document).ready(function () {
             boss.style.left = bossPosx + 'px';
             boss.style.zIndex = 2;
 
-            
-
             for(j=0; j<data.boss[i].bossBullets.length; j++) {
                 const bossBullet = document.createElement('div');
                 bossBullet.setAttribute('class','bullet');
@@ -159,7 +155,6 @@ $(document).ready(function () {
             
             $('#container').append(boss);
         };
-
         
         for(let i=0; i<data.players.length; i++) {
             const player = document.createElement('div');
